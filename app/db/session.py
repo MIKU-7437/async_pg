@@ -8,6 +8,8 @@ engine = create_async_engine(
     echo=settings.POSTGRES_ECHO,
     future=True,
     pool_size=max(5, settings.POSTGRES_POOL_SIZE),
+    pool_recycle=1800,
+    pool_pre_ping=True,
 )
 
 SessionLocal = sessionmaker(
