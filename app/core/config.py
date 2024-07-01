@@ -1,7 +1,6 @@
 from typing import Any
-
 from pydantic import Field, PostgresDsn, validator
-from pydantic-settings import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -11,28 +10,21 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = Field("postgres", env="POSTGRES_PASSWORD")
     POSTGRES_DB: str = Field("postgres", env="POSTGRES_DB")
     POSTGRES_HOST: str = Field("localhost", env="POSTGRES_HOST")
-    POSTGRES_PORT: int | str = Field("5432", env="POSTGRES_PORT")
+    POSTGRES_PORT: int = Field(5432, env="POSTGRES_PORT")
     POSTGRES_ECHO: bool = Field(False, env="POSTGRES_ECHO")
     POSTGRES_POOL_SIZE: int = Field(10, env="POSTGRES_POOL_SIZE")
-    ASYNC_POSTGRES_URI: PostgresDsn | None
+    ASYNC_POSTGRES_URI: str = Field("", env="ASYNC_POSTGRES_URI")
 
     class Config:
         case_sensitive = True
         env_file = ".env"
 
     @validator("ASYNC_POSTGRES_URI", pre=True)
-    def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:
-        if isinstance(v, str):
+    def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> str:
+        if isinstance(v, str) and v:
             return v
 
-        return PostgresDsn.build(
-            scheme="postgresql+asyncpg",
-            user=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_HOST"),
-            port=str(values.get("POSTGRES_PORT")),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
-        )
-
+        return f"postgresql+asyncpg://{values['POSTGRES_USER']}:{values['POSTGRES_PASSWORD']}@" \
+               f"{values['POSTGRES_HOST']}:{values['POSTGRES_PORT']}/{values['POSTGRES_DB']}"
 
 settings = Settings()
