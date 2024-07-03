@@ -38,5 +38,3 @@ class Settings(BaseSettings):
 settings = Settings()
 
 # Test the loaded settings
-print(settings.POSTGRES_USER)  # This should print the value of POSTGRES_USER from the .env file
-print(settings.ASYNC_POSTGRES_URI)  # This should print the assembled database URI
