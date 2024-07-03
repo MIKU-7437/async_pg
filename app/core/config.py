@@ -1,13 +1,21 @@
 from typing import Any
 from pydantic import Field, PostgresDsn, validator
 from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+import os
 
+# Load environment variables from the specified .env file
+dotenv_path = os.path.join(os.path.dirname(__file__), 'app', '.env.local')
+load_dotenv(dotenv_path)
+
+# Ensure that the environment variables are loaded
+load_dotenv()
 
 class Settings(BaseSettings):
     VERSION: str = Field("0.0.1")
     PROJECT_NAME: str = Field("Astrawood")
     POSTGRES_USER: str = Field("postgres", env="POSTGRES_USER")
-    POSTGRES_PASSWORD: str = Field("postgres", env="POSTGRES_PASSWORD")
+    POSTGRES_PASSWORD: str = Field("qwerty", env="POSTGRES_PASSWORD")
     POSTGRES_DB: str = Field("postgres", env="POSTGRES_DB")
     POSTGRES_HOST: str = Field("localhost", env="POSTGRES_HOST")
     POSTGRES_PORT: int = Field(5432, env="POSTGRES_PORT")
@@ -23,10 +31,12 @@ class Settings(BaseSettings):
     def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> str:
         if isinstance(v, str) and v:
             return v
-
-        print(f"postgresql+asyncpg://{values['POSTGRES_USER']}:{values['POSTGRES_PASSWORD']}@" \
-               f"{values['POSTGRES_HOST']}:{values['POSTGRES_PORT']}/{values['POSTGRES_DB']}")
         return f"postgresql+asyncpg://{values['POSTGRES_USER']}:{values['POSTGRES_PASSWORD']}@" \
                f"{values['POSTGRES_HOST']}:{values['POSTGRES_PORT']}/{values['POSTGRES_DB']}"
 
+# Instantiate the settings after loading the environment variables
 settings = Settings()
+
+# Test the loaded settings
+print(settings.POSTGRES_USER)  # This should print the value of POSTGRES_USER from the .env file
+print(settings.ASYNC_POSTGRES_URI)  # This should print the assembled database URI

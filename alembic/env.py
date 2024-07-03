@@ -36,7 +36,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option(settings.assemble_db_connection)
+    url = config.get_main_option(settings.ASYNC_DB_URL)
     context.configure(
         url=url, target_metadata=target_metadata, literal_binds=True
     )
@@ -60,8 +60,10 @@ async def run_migrations_online():
 
     """
 
+    print('/n/n/n/n/n')
+    print(settings.assemble_db_connection_string())
     connectable = create_async_engine(
-        config.get_main_option(settings.assemble_db_connection),
+        config.get_main_option(settings.ASYNC_PRODUCTION_DB_URL),
         poolclass=pool.NullPool,
     )
 
@@ -70,6 +72,10 @@ async def run_migrations_online():
 
 
 if context.is_offline_mode():
+    print('/n/n/n/n/n')
+    # print(settings.assemble_db_connection_string())
     run_migrations_offline()
 else:
+    print('/n/n/n/n/n')
+    # print(settings.assemble_db_connection_string())
     asyncio.run(run_migrations_online())
