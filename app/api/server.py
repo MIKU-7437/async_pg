@@ -1,8 +1,9 @@
+from fastapi import FastAPI
 from api.routes import router as api_router
 from core.config import settings
-from db.utils import create_db_and_tables
 from db.session import engine
-from fastapi import FastAPI
+from db.utils import create_db_and_tables
+
 
 def get_application():
     app = FastAPI(
@@ -13,20 +14,20 @@ def get_application():
     app.include_router(api_router, prefix="/api")
     return app
 
+
 app = get_application()
+
 
 @app.on_event("startup")
 async def on_startup():
-    print(engine)
-    print(engine.__dir__())
-    print(engine.engine)
     await create_db_and_tables(engine)
+
 
 @app.get("/", tags=["health"])
 async def health():
-    return {
-        "name": settings.PROJECT_NAME,
-        "version": settings.VERSION,
-        "status": "OK",
-        "message": "Visit /docs for more information.",
-    }
+    return dict(
+        name=settings.PROJECT_NAME,
+        version=settings.VERSION,
+        status="OK",
+        message="Visit /docs for more information.",
+    )
