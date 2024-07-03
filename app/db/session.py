@@ -10,6 +10,7 @@ engine = create_async_engine(
     pool_size=max(5, settings.POSTGRES_POOL_SIZE),
     pool_recycle=1800,
     pool_pre_ping=True,
+    pool_timeout=60
 )
 
 SessionLocal = sessionmaker(
