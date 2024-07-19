@@ -4,6 +4,11 @@ from uuid_extensions import uuid7
 from datetime import datetime
 
 
+
+class Base(SQLModel):
+    pass
+
+
 class IdMixin(SQLModel):
     id: UUID = Field(
         default_factory=uuid7,

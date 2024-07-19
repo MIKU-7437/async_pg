@@ -35,14 +35,5 @@ class Settings(BaseSettings):
                f"{values['POSTGRES_HOST']}:{values['POSTGRES_PORT']}/{values['POSTGRES_DB']}"
 
 # Print loaded environment variables for debugging
-print("Environment variables loaded:")
-for key, value in os.environ.items():
-    if key.startswith("POSTGRES"):
-        print(f"{key}: {value}")
-
 # Instantiate the settings after loading the environment variables
 settings = Settings()
-
-# Print settings to verify
-print("Settings:")
-print(settings.dict())

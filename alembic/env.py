@@ -1,11 +1,16 @@
 from logging.config import fileConfig
 import asyncio
-from sqlalchemy import pool
+from sqlalchemy import pool, MetaData
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from alembic import context
 
 from app.core.config import settings  # Ensure this imports your settings correctly
+from app.models.base import Base
 from app.models.user import User
+from app.models.category import Category
+from app.models.products import Product
+from sqlalchemy.ext.declarative import declarative_base
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -15,7 +20,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = User.metadata  # Set your target metadata here if you have models
+target_metadata = Base.metadata
+
 
 # Use the async connection string from settings
 async_sqlalchemy_url = settings.ASYNC_POSTGRES_URI
