@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     POSTGRES_POOL_SIZE: int = Field(10, env="POSTGRES_POOL_SIZE")
     ASYNC_POSTGRES_URI: str = Field("", env="ASYNC_POSTGRES_URI")
 
+    SECRET_KEY: str = Field("", env="SECRET_KEY")
+
     class Config:
         case_sensitive = True
         env_file = ".env"
