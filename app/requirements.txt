@@ -1,9 +1,13 @@
 fastapi
+SQLAlchemy
+sqladmin
 pydantic[email]
 pydantic-settings
 uvicorn[standard]
 sqlmodel
+
 gunicorn
 asyncpg
 SQLAlchemy
 uuid7
+alembic
